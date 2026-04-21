@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using ProductService.Application.ExternalServices;
+using ProductService.Application.Queries.QueryDTOs;
 
 namespace ProductService.Infrastructure.ExternalServices;
 

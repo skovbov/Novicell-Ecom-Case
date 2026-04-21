@@ -1,6 +1,5 @@
 ﻿using ProductService.Application.Queries;
 using ProductService.Application.Queries.QueryDTOs;
-using ProductService.Domain.Entities;
 
 namespace ProductService.Api.Endpoints;
 
@@ -24,17 +23,18 @@ public static class ProductEndpoints
         app.MapGet("/api/products", async (
                 IProductQuery productQuery,
                 int pageNumber = 1,
-                int pageSize = 20) =>
+                int pageSize = 20,
+                string? searchName = null) =>
             {
                 if (pageSize > 100) return Results.BadRequest("pageSize må ikke overstige 100");
         
-                var products = await productQuery.GetAllAsync(pageNumber, pageSize);
+                var products = await productQuery.GetAllAsync(pageNumber, pageSize, searchName);
                 return Results.Ok(products);
             })
             .WithName("GetProducts")
             .WithTags("Products")
             .WithSummary("Hent en liste af produkter")
-            .WithDescription("Understøtter pagination og filtrering på kategori")
+            .WithDescription("Understøtter pagination")
             .Produces<List<ProductDto>>()
             .Produces(400);
     }

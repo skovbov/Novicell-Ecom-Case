@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using ProductService.Application.Helpers;
 using ProductService.Application.Queries;
 using ProductService.Application.Queries.QueryDTOs;
-using ProductService.Infrastructure.Helpers;
 
 namespace ProductService.Infrastructure.Queries;
 
@@ -10,6 +10,7 @@ public class ProductQuery(ProductDbContext dbContext, IProductMapper mapper, IMe
 {
     public async Task<ProductDto?> GetByIdAsync(string id)
     {
+        //Caching tilføjet direkte i Query, måske indkapslet i decorater pattern i større løsninger, for mere clean approach
         var cacheKey = $"product:{id}";
         
         if (cache.TryGetValue(cacheKey, out ProductDto? cached))
@@ -27,9 +28,9 @@ public class ProductQuery(ProductDbContext dbContext, IProductMapper mapper, IMe
         return dto;
     }
 
-    public async Task<List<ProductDto>> GetAllAsync(int pageNumber, int pageSize)
+    public async Task<List<ProductDto>> GetAllAsync(int pageNumber, int pageSize, string? searchName)
     {
-        var cacheKey = $"products:{pageNumber}:{pageSize}";
+        var cacheKey = $"products:{pageNumber}:{pageSize}:{searchName}";
 
         if (cache.TryGetValue(cacheKey, out List<ProductDto>? cached))
             return cached!;
@@ -38,6 +39,9 @@ public class ProductQuery(ProductDbContext dbContext, IProductMapper mapper, IMe
             .AsNoTracking()
             .AsQueryable();
 
+        if(searchName != null)
+            query = query.Where(p => p.Title.Contains(searchName));
+        
         var products = await query
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
