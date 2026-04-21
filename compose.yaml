@@ -1,0 +1,30 @@
+﻿services:
+  productservice.api:
+    image: productservice.api
+    build:
+      context: .
+      dockerfile: src/ProductService/ProductService.Api/Dockerfile
+    container_name: productservice-api
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ConnectionStrings__TraceAppDatabase: Host=postgres;Port=5432;Database=novicell_ecom;Username=postgres;Password=postgres
+    depends_on:
+      - postgres
+        
+  
+  postgres:
+    image: postgres:16
+    container_name: novicell-ecom-postgres
+    environment:
+      POSTGRES_DB: novicell_ecom
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-data:

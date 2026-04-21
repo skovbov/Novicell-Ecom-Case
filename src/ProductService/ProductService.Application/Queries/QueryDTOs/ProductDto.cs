@@ -1,6 +1,6 @@
-﻿namespace ProductService.Domain.Entities;
+﻿namespace ProductService.Application.Queries.QueryDTOs;
 
-public class Product
+public record ProductDto
 {
     public string Id { get; set; } 
     public string Title { get; set; } 
@@ -8,4 +8,4 @@ public class Product
     public string Description { get; set; }
     public string Category { get; set; } 
     public string Image { get; set; } 
-}
+};

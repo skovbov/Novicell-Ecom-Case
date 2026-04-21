@@ -4,6 +4,6 @@ namespace ProductService.Application.Repositories;
 
 public interface IProductRepository
 {
-    Task<Product?> GetByIdAsync(string id);
-    Task<List<Product>> GetAllAsync(int pageNumber, int pageSize, Category? category = null);
+    Task<Product?> GetByIdAsync(string id, CancellationToken cancellationToken);
+    Task AddAsync(Product product, CancellationToken cancellationToken);
 }
