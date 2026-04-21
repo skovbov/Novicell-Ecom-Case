@@ -1,0 +1,13 @@
+@ProductService.Api_HostAddress = http://localhost:5001
+
+#if (EnableOpenAPI)
+GET {{ProductService.Api_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+#endif
+
+GET {{ProductService.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
