@@ -6,7 +6,7 @@ Diagrammet herover viser hvordan jeg ville designe løsningen til produktion. Je
 
 Hvis løsningen voksede ville det give mening at splitte dem ad. Det er primært læseoperationerne fra API'et der vil være under pres ved høj trafik som Black Friday, mens sync workeren kører periodisk i baggrunden og ikke har samme skaleringsbehov. Ved at separere dem kunne man skalere API'et horisontalt uden at spin ekstra instanser af workeren op oveni.
  
-I en produktionsklar løsning ville der sidde en **load balancer** foran servicen der fordeler trafik på tværs af flere instanser under høj belastning som Black Friday. API'et er designet statsløst, så horisontal skalering kan fungere uden ændringer i koden. Cachen ville i produktion være **Redis** frem for in-process cache, så alle instanser deler samme cache-lag. Databasen ville hostes på en managed service som **Azure Database for PostgreSQL** der håndterer backup og failover automatisk.
+I en produktionsklar løsning ville der sidde en **load balancer** foran servicen der fordeler trafik på tværs af flere instanser under høj belastning som Black Friday. API'et er designet stateless, så horisontal skalering kan fungere uden ændringer i koden. Cachen ville i produktion være **Redis** frem for in-process cache, så alle instanser deler samme cache-lag. Databasen ville hostes på en managed service som **Azure Database for PostgreSQL** der håndterer backup og failover automatisk.
  
 Fejltolerance er overvejet ved at sync workeren fanger alle exceptions og logger dem uden at crashe applikationen — API'et forbliver tilgængeligt selvom ERP-systemet er nede. I produktion ville **Polly retry-logik** på ERP HTTP-klienten håndtere midlertidige netværksfejl automatisk.
  
